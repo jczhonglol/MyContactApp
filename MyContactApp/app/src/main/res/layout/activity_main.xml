@@ -86,6 +86,7 @@
         android:id="@+id/button_getcontacts"
         android:layout_alignBottom="@+id/button_add"
         android:layout_toRightOf="@+id/button_add"
-        android:layout_toEndOf="@+id/button_add" />
+        android:layout_toEndOf="@+id/button_add"
+        android:onClick="viewData" />
 
 </RelativeLayout>
