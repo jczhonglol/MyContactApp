@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editName;
     EditText editAddress;
     EditText editAge;
+    EditText searchName;
     Button btnAddData;
 
     @Override
@@ -26,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
         myDb = new DatabaseHelper (this);
 
         editName = (EditText) findViewById(R.id.editText_name);
-        editName = (EditText) findViewById(R.id.editText_address);
-        editName = (EditText) findViewById(R.id.editText_age);
+        editAddress = (EditText) findViewById(R.id.editText_address);
+        editAge = (EditText) findViewById(R.id.editText_age);
+        searchName = (EditText) findViewById(R.id.editText_search);
 
     }
 
@@ -55,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         if (res.getCount() == 0){
             showMessage("Error", "No data found in database");
             //put a Log.d message and toast
+            Log.d("MyContact", "No Data found in database");
+
+            int duration = Toast.LENGTH_SHORT;
+            Toast noData = Toast.makeText(this, "No Data Found in Databse", duration);
+            noData.show();
+
             return;
         }
 
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         //     use getString method
 
         while(res.moveToNext()){
+            buffer.append("ID: " + res.getString(0));
             buffer.append("Name: " + res.getString(1));
             buffer.append("   Address: " + res.getString(2));
             buffer.append("   Age: " + res.getString(3));
@@ -74,6 +83,41 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MyContact", buffer.toString());
 
 
+
+    }
+
+    private String returnSearchContact() {
+        String search = searchName.getText().toString();
+        Cursor res = myDb.getAllData();
+        if (res.getCount() == 0) {
+            showMessage("Error", "No data found in database");
+            //put a Log.d message and toast
+            Log.d("MyContact", "No Data found in database");
+
+            int duration = Toast.LENGTH_SHORT;
+            Toast noData = Toast.makeText(this, "No Data Found in Database", duration);
+            noData.show();
+
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        //setup loop with Cursor moveToNext method
+        //     append each COL to buffer
+        //     use getString method
+
+        while (res.moveToNext()) {
+            if (res.getString(1).toUpperCase().equals(search.toUpperCase())) {
+                return ("Name: " + res.getString(1)
+                        + "    Address: " + res.getString(2)
+                        + "    Age: " + res.getString(3));
+            }
+        }
+        return "Not Found";
+    }
+
+    public void searchContact (View v){
+        showMessage("Result", returnSearchContact());
+        Log.d("Result", returnSearchContact());
 
     }
 
